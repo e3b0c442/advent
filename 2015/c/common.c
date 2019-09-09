@@ -29,7 +29,7 @@ int read_file_to_buffer(char **buf, const char *filename)
         goto err_cleanup; /* errno is set by fopen() */
 
     /* allocate the buffer */
-    *buf = malloc(s.st_size);
+    *buf = malloc(s.st_size + 1);
     if (*buf == NULL)
         goto err_cleanup; /* errno is set by malloc() */
 
@@ -40,6 +40,7 @@ int read_file_to_buffer(char **buf, const char *filename)
             goto err_cleanup;
 
     /* file is read into the buffer, return the number of bytes read */
+    (*buf)[rd] = '\0'; // add a null terminator
     rval = rd;
     goto cleanup;
 
@@ -52,4 +53,12 @@ cleanup:
     if (f != NULL)
         fclose(f);
     return rval;
+}
+
+int cmp_int_asc(const void *a, const void *b)
+{
+    int l = *(const int *)a;
+    int r = *(const int *)b;
+
+    return l < r ? -1 : l > r ? 1 : 0;
 }

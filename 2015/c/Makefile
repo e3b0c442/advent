@@ -2,7 +2,7 @@ CC      := gcc
 CCFLAGS := -Wall -g -pedantic
 LDFLAGS :=
 
-TARGETS:= day1 day2
+TARGETS:= day1 day2 day3
 MAINS  := $(addsuffix .o, $(TARGETS) )
 OBJ    := common.o $(MAINS)
 DEPS   := common.c

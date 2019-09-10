@@ -1,8 +1,8 @@
 CC      := gcc
 CCFLAGS := -Wall -g -pedantic
-LDFLAGS :=
+LDFLAGS := -lcrypto
 
-TARGETS:= day1 day2 day3
+TARGETS:= day1 day2 day3 day4
 MAINS  := $(addsuffix .o, $(TARGETS) )
 OBJ    := common.o $(MAINS)
 DEPS   := common.c

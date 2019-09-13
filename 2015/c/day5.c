@@ -1,5 +1,4 @@
 #include <errno.h>
-#include <openssl/md5.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>

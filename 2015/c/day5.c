@@ -1,5 +1,5 @@
 #include <errno.h>
-#include <stdbool.h>
+#include <regex.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -7,6 +7,7 @@
 
 int main(int argc, char const *argv[])
 {
+    int rc = 0;
     /* check that filename was provided */
     if (argc < 2)
     {
@@ -22,115 +23,59 @@ int main(int argc, char const *argv[])
         fprintf(stderr, "File read failed: %s\n", strerror(errno));
         return -1;
     }
-    char *input2 = strdup(input);
 
     printf("Day 5:\n");
 
-    /* tokenize the data into lines */
+    regex_t rule1, rule2, rule3, rule4, rule5;
+    if (regcomp(&rule1, "[aeiou].*[aeiou].*[aeiou]", 0))
+        goto err_cleanup;
+
+    if (regcomp(&rule2, "\\(.\\)\\1", 0))
+        goto err_cleanup;
+
+    if (regcomp(&rule3, "\\(ab\\|cd\\|pq\\|xy\\)", 0))
+        goto err_cleanup;
+
+    if (regcomp(&rule4, "\\(..\\).*\\1", 0))
+        goto err_cleanup;
+
+    if (regcomp(&rule5, "\\(.\\).\\1", 0))
+        goto err_cleanup;
+
+    int good = 0;
+    int great = 0;
+
     char *cursor = input;
     char *line = strsep(&cursor, "\n");
-    int good = 0;
     while (line != NULL)
     {
         if (strlen(line) == 0)
             goto tokenize;
 
-        int vowels = 0;
-        int max_cons = 1;
-        int cons = 1;
-        char last = '\0';
-
-        for (int i = 0; i < strlen(line); i++)
-        {
-            if (line[i] == last)
-            {
-                cons++;
-                if (cons > max_cons)
-                    max_cons = cons;
-            }
-            else
-                cons = 1;
-
-            switch (line[i])
-            {
-            case 'b':
-                if (last == 'a')
-                    goto tokenize;
-                break;
-            case 'd':
-                if (last == 'c')
-                    goto tokenize;
-                break;
-            case 'q':
-                if (last == 'p')
-                    goto tokenize;
-                break;
-            case 'y':
-                if (last == 'x')
-                    goto tokenize;
-                break;
-            case 'a':
-            case 'e':
-            case 'i':
-            case 'o':
-            case 'u':
-                vowels++;
-                break;
-            }
-
-            last = line[i];
-        }
-        if (vowels >= 3 && max_cons >= 2)
+        if (regexec(&rule3, line, 0, NULL, 0) && !regexec(&rule1, line, 0, NULL, 0) && !regexec(&rule2, line, 0, NULL, 0))
             good++;
+
+        if (!regexec(&rule4, line, 0, NULL, 0) && !regexec(&rule5, line, 0, NULL, 0))
+            great++;
 
     tokenize:
         line = strsep(&cursor, "\n");
     }
 
     printf("\tSolution 1: %d\n", good);
+    printf("\tSolution 2: %d\n", great);
 
-    cursor = input2;
-    line = strsep(&cursor, "\n");
-    good = 0;
-    while (line != NULL)
-    {
-        if (strlen(line) == 0)
-            goto tokenize2;
+    goto cleanup;
 
-        bool repeater = false;
-        bool doubler = false;
-
-        for (int i = 0; i < strlen(line); i++)
-        {
-            if (i + 2 < strlen(line))
-                if (line[i] == line[i + 2])
-                    repeater = true;
-
-            if (i + 3 < strlen(line))
-            {
-                for (int j = i + 2; j < strlen(line) - 1; j++)
-                {
-                    if (line[i] == line[j] && line[i + 1] == line[j + 1])
-                    {
-                        doubler = true;
-                        break;
-                    }
-                }
-            }
-            if (repeater && doubler)
-            {
-                good++;
-                goto tokenize2;
-            }
-        }
-
-    tokenize2:
-        line = strsep(&cursor, "\n");
-    }
-
-    printf("\tSolution 2: %d\n", good);
-
+err_cleanup:
+    rc = -1;
+    printf("badman\n");
+cleanup:
+    regfree(&rule1);
+    regfree(&rule2);
+    regfree(&rule3);
+    regfree(&rule4);
+    regfree(&rule5);
     free(input);
-    free(input2);
-    return 0;
+    return rc;
 }

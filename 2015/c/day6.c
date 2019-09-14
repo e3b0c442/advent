@@ -44,7 +44,7 @@ int main(int argc, char const *argv[])
         if (strlen(line) == 0)
             goto tokenize;
 
-        memset(matches, 0, sizeof(regmatch_t));
+        memset(matches, 0, 6 * sizeof(regmatch_t));
         result = regexec(&inst_r, line, 6, matches, 0);
         if (result != 0)
             goto err_cleanup;

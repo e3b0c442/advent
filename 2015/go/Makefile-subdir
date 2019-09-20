@@ -1,0 +1,7 @@
+.PHONY: all clean
+
+day:
+	go build
+
+clean:
+	find . -type f -not \( -name 'day*.go' -or -name 'Makefile' \) -delete

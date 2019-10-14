@@ -1,5 +1,5 @@
 #include <errno.h>
-#include <regex.h>
+#include <pcreposix.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -27,7 +27,7 @@ int main(int argc, char const *argv[])
 
     printf("Day 6:\n");
     regex_t inst_r;
-    int result = regcomp(&inst_r, "\\(turn on\\|turn off\\|toggle\\) \\([[:digit:]]\\{1,\\}\\),\\([[:digit:]]\\{1,\\}\\) through \\([[:digit:]]\\{1,\\}\\),\\([[:digit:]]\\{1,\\}\\)", 0);
+    int result = regcomp(&inst_r, "(turn on|turn off|toggle) (\\d+),(\\d+) through (\\d+),(\\d+)", 0);
     if (result != 0)
         goto err_cleanup;
 

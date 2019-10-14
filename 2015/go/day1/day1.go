@@ -9,28 +9,27 @@ import (
 
 func main() {
 	if len(os.Args) < 2 {
-		log.Fatal("Must provide input filename")
+		log.Fatal("Input filename required")
 	}
 
-	input, err := ioutil.ReadFile(os.Args[1])
+	f, err := ioutil.ReadFile(os.Args[1])
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	fmt.Println("Day 1")
+	fmt.Println("Day 1:")
 
 	floor := 0
 	position := 0
-
-	for i, c := range input {
+	for i, c := range f {
+		i++
 		switch c {
 		case '(':
 			floor++
 		case ')':
 			floor--
 		}
-		if position < 1 && floor == -1 {
-			position = i + 1
+		if floor == -1 && position < 1 {
+			position = i
 		}
 	}
 

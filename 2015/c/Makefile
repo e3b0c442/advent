@@ -1,15 +1,21 @@
 CC      := gcc
 CCFLAGS := -Wall -g -pedantic
-LDFLAGS := -lcrypto
+LDFLAGS := -lcrypto -lpcreposix
 
-TARGETS:= day1 day2 day3 day4 day5 day6
+DAYS := 1 2 3 4 5 6 7
+TARGETS:= $(addprefix day, $(DAYS))
 MAINS  := $(addsuffix .o, $(TARGETS) )
-OBJ    := common.o $(MAINS)
-DEPS   := common.c
+OBJ    := common.o esht.o $(MAINS)
+DEPS   := common.c esht.c
 
-.PHONY: all clean
+.PHONY: all run clean
 
 all: $(TARGETS)
+
+run: all
+	for i in $(DAYS) ; do \
+		./day$$i ../input$$i.txt ; \
+	done
 
 clean:
 	rm -f $(TARGETS) $(OBJ)

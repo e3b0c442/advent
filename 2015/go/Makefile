@@ -1,9 +1,17 @@
-TARGETS := day1
+DAYS:= 1 2 3 4
+TARGETS := $(addprefix day, $(DAYS))
 
-.PHONY: $(TARGETS) clean
+.PHONY: all run clean
 
-$(TARGETS):
-	make -C $@
+all:
+	mkdir -p build
+	go build -o build ./...
+
+run: all
+	for i in $(DAYS) ; do \
+		build/day$$i ../input$$i.txt ; \
+	done
 
 clean:
-	make -C $(TARGETS) clean
+	rm -rf build
+	go clean ./...

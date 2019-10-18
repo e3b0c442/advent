@@ -2,7 +2,7 @@ CC      := gcc
 CCFLAGS := -Wall -g -pedantic
 LDFLAGS := -lcrypto -lpcreposix
 
-DAYS := 1 2 3 4 5 6 7
+DAYS := 1 2 3 4 5 6 7 8
 TARGETS:= $(addprefix day, $(DAYS))
 MAINS  := $(addsuffix .o, $(TARGETS) )
 OBJ    := common.o esht.o $(MAINS)
